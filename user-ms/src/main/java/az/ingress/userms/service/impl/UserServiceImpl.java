@@ -2,6 +2,7 @@ package az.ingress.userms.service.impl;
 import az.ingress.common.model.exception.ApplicationException;
 import az.ingress.userms.model.dto.response.UserResponseDto;
 import az.ingress.userms.model.entity.User;
+import az.ingress.userms.model.enums.Exceptions;
 import az.ingress.userms.repository.UserRepository;
 import az.ingress.userms.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,12 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserDetailsById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ApplicationException(NOT_FOUND, id));
         return new UserResponseDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
+    }
+
+    @Override
+    public UserResponseDto getUserDetailsByEmail(String email) {
+        User user = userRepository.findByStatusAndEmailAndIsActiveAndIsEnabled(true,email, true, true)
+                .orElseThrow(()-> new ApplicationException(NOT_FOUND,email));
+        return new UserResponseDto(user.getId(),user.getFirstName(),user.getLastName(),user.getEmail());
     }
 }
