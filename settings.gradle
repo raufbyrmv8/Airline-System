@@ -1,0 +1,6 @@
+rootProject.name = 'AirlineReservationSystem'
+
+include 'common'
+include 'user-ms'
+include 'flight-ms'
+include 'notification-ms'

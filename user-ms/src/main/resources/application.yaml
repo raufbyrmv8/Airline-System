@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: user-ms
+
+  profiles:
+    include:
+     - db
+     - common
+
+  security:
+    jwt-secret-key: eW91ci0yNTYtYml0LXNlY3JldHlvdXItMjU2LWJpdC1zZWNyZXR5b3VyLTI1Ni1iaXQtc2VjcmV0eW91ci0yNTYtYml0LXNlY3JldHlvdXItMjU2LWJpdC1zZWNyZXR5b3VyLTI1Ni1iaXQtc2VjcmV0

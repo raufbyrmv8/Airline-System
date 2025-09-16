@@ -1,0 +1,32 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:9003/user-ms?currentSchema=user_
+    password: 123456
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: true
+    open-in-view: off
+    properties:
+      hibernate:
+        format_sql: true
+
+#  liquibase:
+#    change-log: db/changelog/db.changelog-master.yaml
+#    enabled: true
+
+
+
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
+#  cache:
+#    type: redis
+#  main:
+#    allow-bean-definition-overriding: true
