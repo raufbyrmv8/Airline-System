@@ -32,7 +32,7 @@ public class PasswordServiceImpl implements PasswordService {
     private final JwtService jwtService;
     @Value("${application.token.confirmation.password-reset-expiration-time}")
     private Long PASSWORD_RESET_EXPIRATION_TIME;
-    @Value("${kafka.topic.reset-password}")
+//    @Value("${kafka.topic.reset-password}")
     private String RESET_PASSWORD_TOPIC;
 
     @Override

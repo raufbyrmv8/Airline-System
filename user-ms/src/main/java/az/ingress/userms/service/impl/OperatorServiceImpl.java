@@ -20,7 +20,7 @@ public class OperatorServiceImpl implements OperatorService {
     private final UserRepository userRepository;
 //    private final KafkaProducer kafkaProducer;
 
-    @Value("${kafka.topic.operator-register}")
+//    @Value("${kafka.topic.operator-register}")
     private String OPERATOR_REGISTER_TOPIC;
 
     @Override

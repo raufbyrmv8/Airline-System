@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final VerificationService verificationService;
     private final JwtService jwtService;
     private final HttpServletResponse response;
-    @Value("${kafka.topic.user-registration}")
+//    @Value("${kafka.topic.user-registration}")
     private String USER_REGISTRATION_TOPIC;
 
     public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, VerificationService verificationService, JwtService jwtService, HttpServletResponse response) {
