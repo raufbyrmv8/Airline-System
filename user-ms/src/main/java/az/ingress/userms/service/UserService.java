@@ -6,5 +6,5 @@ import org.springframework.stereotype.Service;
 public interface UserService {
 
     UserResponseDto getUserDetailsById(Long id);
-
+    UserResponseDto getUserDetailsByEmail(String email);
 }

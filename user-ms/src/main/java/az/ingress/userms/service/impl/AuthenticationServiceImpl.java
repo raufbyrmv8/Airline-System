@@ -53,6 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(userRequestDto.password()));
         userRepository.save(user);
         String registrationToken = verificationService.sendVerificationEmail(user);
+        log.info("VERIFY LINK: http://localhost:8083/api/v1/auth/verify?token={}", registrationToken);
 //        kafkaProducer.sendUserRegistration(USER_REGISTRATION_TOPIC, new UserRegisterDto(user.getEmail(), user.getFirstName(), user.getLastName(), registrationToken));
     }
 
