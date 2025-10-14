@@ -6,11 +6,8 @@ import az.ingress.userms.model.entity.User;
 import az.ingress.userms.repository.UserRepository;
 import az.ingress.userms.service.OperatorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 import static az.ingress.userms.model.enums.Exceptions.NOT_FOUND;
 
 @Service
@@ -25,7 +22,6 @@ public class OperatorServiceImpl implements OperatorService {
 
     @Override
     public void registerOperator(OperatorRequestDto dto) {
-
         User user = userRepository.findByEmail(dto.email()).orElseThrow(() -> new ApplicationException(NOT_FOUND));
         List<String> adminEmails = userRepository.findEmailsByRole(Roles.ADMIN).orElseThrow(() -> new ApplicationException(NOT_FOUND));
         userRepository.save(user);
@@ -41,7 +37,6 @@ public class OperatorServiceImpl implements OperatorService {
 
     @Override
     public void removeOperatorRole(OperatorRequestDto dto) {
-
         User user = userRepository.findByEmail(dto.email()).orElseThrow(() -> new ApplicationException(NOT_FOUND));
         user.setRole(Roles.CUSTOMER);
         userRepository.save(user);
