@@ -10,6 +10,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: user-ms
+  flight-ms-db:
+    image: postgres
+    ports:
+      - "9001:5432"
+    volumes:
+      - db_data_flight:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: flight-ms
 
 volumes:
   db_data_user: {}
+  db_data_flight: {}

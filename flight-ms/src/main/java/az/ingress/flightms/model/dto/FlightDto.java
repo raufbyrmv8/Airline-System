@@ -1,8 +1,8 @@
 package az.ingress.flightms.model.dto;
 
+import az.ingress.flightms.model.dto.response.PlaneResponseDTO;
+import az.ingress.flightms.model.enums.ApprovalState;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ingress.flightms.model.dto.response.PlaneResponseDTO;
-import ingress.flightms.model.enums.ApprovalState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
