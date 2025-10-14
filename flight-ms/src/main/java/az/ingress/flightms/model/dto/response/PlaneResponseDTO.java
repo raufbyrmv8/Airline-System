@@ -1,6 +1,7 @@
 package az.ingress.flightms.model.dto.response;
 
-import az.ingress.flightms.model.dto.AirlineDto;
+
+import az.ingress.flightms.model.dto.request.AirlineDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
