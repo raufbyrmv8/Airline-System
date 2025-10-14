@@ -1,0 +1,13 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+
+file:
+  directory: /files
+  url: /files
+
+server:
+  name: http://localhost:8081
+  servlet:
+    context-path: /flight-ms

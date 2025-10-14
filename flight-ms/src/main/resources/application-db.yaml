@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:9001/flight-ms?currentSchema=flight
+    password: 123456
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+    show-sql: true
+    open-in-view: off
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
