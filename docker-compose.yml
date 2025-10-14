@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  user-ms-db:
+    image: postgres
+    ports:
+      - "9003:5432"
+    volumes:
+      - db_data_user:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: user-ms
+
+volumes:
+  db_data_user: {}
