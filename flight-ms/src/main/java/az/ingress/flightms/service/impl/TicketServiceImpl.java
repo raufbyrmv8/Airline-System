@@ -1,6 +1,7 @@
 package az.ingress.flightms.service.impl;
 
 import az.ingress.common.config.JwtSessionData;
+import az.ingress.common.model.dto.TicketMailDto;
 import az.ingress.common.model.exception.ApplicationException;
 import az.ingress.flightms.model.dto.request.TicketConfirmationRequestDto;
 import az.ingress.flightms.model.dto.request.TicketCreateRequestDto;
@@ -14,6 +15,7 @@ import az.ingress.flightms.model.enums.PlaceStatus;
 import az.ingress.flightms.model.enums.TicketStatus;
 import az.ingress.flightms.repository.*;
 import az.ingress.flightms.service.TicketService;
+import az.ingress.flightms.service.kafka.KafkaProducerService;
 import az.ingress.flightms.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static az.ingress.flightms.model.enums.Exceptions.*;
+import static az.ingress.flightms.util.FileUtil.createRefundedTicketContent;
 
 
 @Service
@@ -36,6 +39,7 @@ public class TicketServiceImpl implements TicketService {
     private final PlanePlaceRepository planePlaceRepository;
     private final TicketRepository ticketRepository;
     private final FileService fileService;
+    private final KafkaProducerService kafkaProducerService;
 
 
     public TicketResponseDto createTicketRequest(TicketRequestDto dto) {
@@ -112,7 +116,7 @@ public class TicketServiceImpl implements TicketService {
 
         String ticketContent = FileUtil.createTicketExample(ticket, flightPlanePlace);
         String ticketExampleFileUrl = fileService.createAndWriteToFile(ticketContent);
-//        kafkaProducerService.sendTicketContent(new TicketMailDto(ticketContent, jwtSessionData.getUsername(), "Ticket Confirmation"));
+        kafkaProducerService.sendTicketContent(new TicketMailDto(ticketContent, jwtSessionData.getUsername(), "Ticket Confirmation"));
         return new TicketConfirmationResponseDto(ticketExampleFileUrl);
     }
 
@@ -141,6 +145,6 @@ public class TicketServiceImpl implements TicketService {
                 .orElseThrow(() -> new ApplicationException(NOT_FOUND, FlightPlanePlace.class.getSimpleName()))
                 .setStatus(false);
 
-//        kafkaProducerService.sendTicketContent(new TicketMailDto(createRefundedTicketContent(ticket), jwtSessionData.getUsername(), "Ticket Refunded"));
+        kafkaProducerService.sendTicketContent(new TicketMailDto(createRefundedTicketContent(ticket), jwtSessionData.getUsername(), "Ticket Refunded"));
     }
 }

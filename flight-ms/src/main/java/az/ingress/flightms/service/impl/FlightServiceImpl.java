@@ -1,5 +1,7 @@
 package az.ingress.flightms.service.impl;
 import az.ingress.common.config.JwtSessionData;
+import az.ingress.common.kafka.AdminNotificationDto;
+import az.ingress.common.kafka.OperatorNotificationDto;
 import az.ingress.flightms.config.client.UserClient;
 import az.ingress.flightms.config.client.UserResponseDto;
 import az.ingress.flightms.exception.NotFoundException;
@@ -10,11 +12,13 @@ import az.ingress.flightms.model.dto.request.FlightRequestDto;
 import az.ingress.flightms.model.entity.Flight;
 import az.ingress.flightms.model.entity.Plane;
 import az.ingress.flightms.model.enums.ApprovalState;
+import az.ingress.flightms.producer.KafkaProducer;
 import az.ingress.flightms.repository.FlightRepository;
 import az.ingress.flightms.repository.PlaneRepository;
 import az.ingress.flightms.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +38,13 @@ public class FlightServiceImpl implements FlightService {
     private final FlightMapper flightMapper;
     private final JwtSessionData jwtSessionData;
     private final UserClient userClient;
+    private final KafkaProducer kafkaProducer;
+
+    @Value("${kafka.topic.admin-topic}")
+    private String ADMIN_TOPIC;
+
+    @Value("${kafka.topic.operator-topic}")
+    private String OPERATOR_TOPIC;
 
     @Override
     public FlightDto getById(Long id) {
@@ -72,11 +83,11 @@ public class FlightServiceImpl implements FlightService {
         var savedFlight = flightRepository.save(flight);
         log.info("Flight created with ID: {}", savedFlight.getId());
 
-//        kafkaProducer.notifyAdminForApprovement(ADMIN_TOPIC,
-//                new AdminNotificationDto(
-//                        jwtSessionData.getUserId(),
-//                        savedFlight.getId(),
-//                        "Notification for admin for  flight approvement"));
+        kafkaProducer.notifyAdminForApprovement(ADMIN_TOPIC,
+                new AdminNotificationDto(
+                        jwtSessionData.getUserId(),
+                        savedFlight.getId(),
+                        "Notification for admin for  flight approvement"));
 
         return flightMapper.toDto(savedFlight);
     }
@@ -118,6 +129,16 @@ public class FlightServiceImpl implements FlightService {
 
         var operatorDto = userClient.getUserDetailsById(flight.getCreatedBy());
         log.info("Flight with ID: {} approved", id);
+        OperatorNotificationDto notification = new OperatorNotificationDto(
+                flight.getId(),
+                operatorDto.email(),
+                operatorDto.name(),
+                operatorDto.surname(),
+                String.valueOf(ApprovalState.APPROVED),
+                "Flight approved successfully with id :" + flight.getId(),
+                feedbackMessage
+        );
+        kafkaProducer.notifyOperator(OPERATOR_TOPIC, notification);
     }
 
     @Override
@@ -136,8 +157,16 @@ public class FlightServiceImpl implements FlightService {
         flight.setFeedbackMessage(feedback);
         flightRepository.save(flight);
         var operatorDto = userClient.getUserDetailsById(flight.getCreatedBy());
-
         log.info("Flight with ID: {} rejected", id);
+        OperatorNotificationDto notification = new OperatorNotificationDto(
+                flight.getId(),
+                operatorDto.email(),
+                operatorDto.name(),
+                operatorDto.surname(),
+                String.valueOf(ApprovalState.REJECTED),
+                "Flight rejected successfully with id :" + flight.getId(),
+                feedbackMessage);
+        kafkaProducer.notifyOperator(OPERATOR_TOPIC, notification);
     }
 
     @Override

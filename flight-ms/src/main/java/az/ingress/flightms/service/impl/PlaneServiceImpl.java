@@ -31,7 +31,6 @@ public class PlaneServiceImpl implements PlaneService {
     private final PlaneRepository planeRepository;
     private final AirlineRepository airlineRepository;
     private final PlanePlaceRepository planePlaceRepository;
-
     private final PlaneMapper planeMapper;
 
     @Override
