@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:9002/notification-ms?currentSchema=notification
+    password: 123456
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: true
+    open-in-view: off
+    properties:
+      hibernate:
+        format_sql: true
