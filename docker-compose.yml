@@ -20,7 +20,18 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: flight-ms
+  notification-ms-db:
+    image: postgres
+    ports:
+      - "9002:5432"
+    volumes:
+      - db_data_notification:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: notification-ms
 
 volumes:
   db_data_user: {}
   db_data_flight: {}
+  db_data_notification: {}
