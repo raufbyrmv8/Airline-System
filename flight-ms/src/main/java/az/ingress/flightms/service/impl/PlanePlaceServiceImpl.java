@@ -52,7 +52,6 @@ public class PlanePlaceServiceImpl implements PlanePlaceService {
 
     @Override
     public Set<PlanePlaceResponse> getAllPlanePlaces() {
-       // planePlaceRepository.findAll().forEach(planePlace -> planePlaceRepository.save(planePlace));
 
         return planePlaceRepository.findAll().stream().map(planePlaceMapper::mapToPlanePlaceToResponse)
                 .collect(Collectors.toSet());
