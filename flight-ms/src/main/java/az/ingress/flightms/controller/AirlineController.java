@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/airline")
+@RequestMapping("/api/v1/airline")
 @RequiredArgsConstructor
 public class AirlineController {
     private final AirlineService airlineService;
