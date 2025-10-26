@@ -1,5 +1,6 @@
 package az.ingress.flightms.service.impl;
 import az.ingress.common.model.exception.ApplicationException;
+import az.ingress.flightms.exception.NotFoundException;
 import az.ingress.flightms.model.dto.request.AirlineDto;
 import az.ingress.flightms.model.dto.response.AirlineResponseDto;
 import az.ingress.flightms.model.entity.Airline;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +38,7 @@ public class AirlineServiceImpl implements AirlineService {
     @Override
     public AirlineResponseDto findById(long id) {
         Airline airline = airlineRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Airline not found with id : " + id));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND, id));
         return modelMapper.map(airline, AirlineResponseDto.class);
     }
 
@@ -53,14 +53,14 @@ public class AirlineServiceImpl implements AirlineService {
     @Override
     public AirlineDto findByAirlineByName(String name) {
         Airline airline = airlineRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException("Airline not found with name : " + name));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND, name));
         return modelMapper.map(airline, AirlineDto.class);
     }
 
     @Override
     public AirlineResponseDto updateAirline(long id, AirlineDto airline) {
         Airline existingAirline = airlineRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Airline not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND, id));
         existingAirline.setName(airline.getName());
         Airline updatedAirline = airlineRepository.save(existingAirline);
         log.info("Airline updated with ID: {}", updatedAirline.getId());
@@ -70,7 +70,7 @@ public class AirlineServiceImpl implements AirlineService {
     @Override
     public void deleteAirline(long id) {
         Airline airline = airlineRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Airline not found with id " + id));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND,  id));
         airline.setStatus(false);
     }
 }
