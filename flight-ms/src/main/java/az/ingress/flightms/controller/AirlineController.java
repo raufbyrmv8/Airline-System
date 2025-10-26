@@ -30,7 +30,7 @@ public class AirlineController {
         return airlineService.findAll();
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public AirlineResponseDto updateAirline(@PathVariable long id, @RequestBody @Validated AirlineDto airline) {
         return airlineService.updateAirline(id, airline);
     }
