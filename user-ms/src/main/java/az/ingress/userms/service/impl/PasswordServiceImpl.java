@@ -1,4 +1,5 @@
 package az.ingress.userms.service.impl;
+import az.ingress.common.kafka.UserResetPasswordDto;
 import az.ingress.common.model.exception.ApplicationException;
 import az.ingress.common.service.JwtService;
 import az.ingress.userms.model.dto.ChangePasswordDto;
@@ -6,6 +7,7 @@ import az.ingress.userms.model.dto.ResetPasswordDto;
 import az.ingress.userms.model.entity.User;
 import az.ingress.userms.model.entity.Verification;
 import az.ingress.userms.model.enums.TokenType;
+import az.ingress.userms.producer.KafkaProducer;
 import az.ingress.userms.repository.UserRepository;
 import az.ingress.userms.repository.VerificationRepository;
 import az.ingress.userms.service.PasswordService;
@@ -29,10 +31,11 @@ public class PasswordServiceImpl implements PasswordService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationRepository tokenRepository;
+    private final KafkaProducer kafkaProducer;
     private final JwtService jwtService;
     @Value("${application.token.confirmation.password-reset-expiration-time}")
     private Long PASSWORD_RESET_EXPIRATION_TIME;
-//    @Value("${kafka.topic.reset-password}")
+    @Value("${kafka.topic.reset-password}")
     private String RESET_PASSWORD_TOPIC;
 
     @Override
@@ -56,7 +59,7 @@ public class PasswordServiceImpl implements PasswordService {
         userRepository.findByEmail(email).ifPresent( user -> {
             String token = generateToken();
             createPasswordResetTokenForUser(user, token);
-//            kafkaProducer.sendPasswordResetMessage(RESET_PASSWORD_TOPIC, new UserResetPasswordDto(user.getEmail(), user.getFirstName(), user.getLastName(), token));
+            kafkaProducer.sendPasswordResetMessage(RESET_PASSWORD_TOPIC, new UserResetPasswordDto(user.getEmail(), user.getFirstName(), user.getLastName(), token));
         });
     }
 
