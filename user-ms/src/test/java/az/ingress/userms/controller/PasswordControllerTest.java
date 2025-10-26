@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PasswordControllerTest {
     @Mock
     private PasswordService passwordService;
-    @Mock
-    private HttpServletResponse httpServletResponse;
     @InjectMocks
     private PasswordController passwordController;
     private MockMvc mockMvc;
