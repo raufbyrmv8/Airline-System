@@ -1,4 +1,5 @@
 package az.ingress.userms.service.impl;
+import az.ingress.common.kafka.UserRegisterDto;
 import az.ingress.common.model.exception.ApplicationException;
 import az.ingress.common.service.JwtService;
 import az.ingress.userms.mapper.UserMapper;
@@ -7,6 +8,7 @@ import az.ingress.userms.model.dto.request.UserRequestDto;
 import az.ingress.userms.model.dto.response.TokenResponseDto;
 import az.ingress.userms.model.entity.User;
 import az.ingress.userms.model.enums.TokenType;
+import az.ingress.userms.producer.KafkaProducer;
 import az.ingress.userms.repository.UserRepository;
 import az.ingress.userms.service.AuthenticationService;
 import az.ingress.userms.service.VerificationService;
@@ -30,17 +32,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final VerificationService verificationService;
     private final JwtService jwtService;
+    private final KafkaProducer kafkaProducer;
     private final HttpServletResponse response;
-//    @Value("${kafka.topic.user-registration}")
+    @Value("${kafka.topic.user-registration}")
     private String USER_REGISTRATION_TOPIC;
 
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, VerificationService verificationService, JwtService jwtService, HttpServletResponse response) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, VerificationService verificationService, JwtService jwtService, HttpServletResponse response,KafkaProducer kafkaProducer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.verificationService = verificationService;
         this.jwtService = jwtService;
         this.response = response;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
         String registrationToken = verificationService.sendVerificationEmail(user);
         log.info("VERIFY LINK: http://localhost:8083/api/v1/auth/verify?token={}", registrationToken);
-//        kafkaProducer.sendUserRegistration(USER_REGISTRATION_TOPIC, new UserRegisterDto(user.getEmail(), user.getFirstName(), user.getLastName(), registrationToken));
+        kafkaProducer.sendUserRegistration(USER_REGISTRATION_TOPIC, new UserRegisterDto(user.getEmail(), user.getFirstName(), user.getLastName(), registrationToken));
     }
 
     @Override
