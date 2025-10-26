@@ -1,0 +1,5 @@
+kafka:
+  topic:
+    user-registration: user-registration
+    reset-password: reset-password
+    operator-register: operator-register
