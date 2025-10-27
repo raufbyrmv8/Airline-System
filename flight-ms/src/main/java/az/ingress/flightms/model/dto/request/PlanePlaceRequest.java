@@ -2,10 +2,14 @@ package az.ingress.flightms.model.dto.request;
 
 
 import az.ingress.flightms.model.enums.PlaceType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class PlanePlaceRequest {
     private Integer place;    // optional when creating a new plane place
